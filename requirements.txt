@@ -1,0 +1,9 @@
+bottle==0.12.13
+TwitterAPI==2.5.4
+requests-oauthlib==1.0.0
+beautifulsoup4==4.6.0
+tweepy==3.6.0
+requests==2.19.0
+urllib3==1.23
+oauthlib==2.1.0
+html5lib==0.999
