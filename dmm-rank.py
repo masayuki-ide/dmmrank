@@ -54,7 +54,7 @@ print(item_id)
 #取得
 html = req.urlopen("https://api.dmm.com/affiliate/v3/ItemList?api_id=" + APPID + "&affiliate_id=" + AFFILIATEID + "%20&site=DMM.R18&service=digital&floor=videoa&hits=20&sort=rank&cid=" + item_id + "&output=xml")
 soup_result = BeautifulSoup(html, "html5lib")
-
+# https://api.dmm.com/affiliate/v3/ItemList?api_id=YHhCqqXCAF6zCGAWd9WK&affiliate_id=deeei-999%20&site=DMM.R18&service=digital&floor=videoa&hits=20&sort=rank&cid=dvaj00252&output=xml
 # print("所得したデータを表示します")
 # print(soup_result.prettify())
 
@@ -64,9 +64,19 @@ try:
     afi_url = soup_result.affiliateurlsp.string
     print(afi_url)
     photoURL = soup_result.imageurl.large.string
-    # genre_tag = soup_result.find("genre")
-    # print(genre_tag.find("name"))
-    content = title + ' ' + afi_url
+    item_pagename = "item_page.xml"
+    req.urlretrieve(afi_url, item_pagename)
+    xml = open(item_pagename, "r", encoding="utf-8").read()
+    soup = BeautifulSoup(xml, 'html.parser')
+    sale_class = soup.find(class_="mv-sale")
+    sale_limit = sale_class.find("span").string
+    print(sale_limit)
+    price_class = soup.find(class_="price")
+    hi_price = price_class.find(class_="tx-lt").string
+    low_price = price_class.find(class_="tx-hangaku").string
+    print(hi_price)
+    print(low_price)
+    content = "【" + sale_limit + " " + hi_price + "→" + low_price + "】" + "" + title + ' ' + afi_url
     print("ツイート内容：{}".format(content))
     request = requests.get(photoURL, stream=True)
     filename = "temp.jpg"
